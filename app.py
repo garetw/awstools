@@ -1,6 +1,13 @@
 import src.awstools as aws
 import datetime
+## remove me after dev
 from dateutil.tz import tzutc
+###
+
+def pretty(make_me_beautiful):
+    import pprint
+    pp = pprint.PrettyPrinter(indent=4)
+    return pp.pprint(make_me_beautiful)
 
 def get_new_temporary_session(**kwargs):
     temp_mfa_token = aws.authenticate_mfa_session_token(**kwargs)
@@ -9,7 +16,7 @@ def get_new_temporary_session(**kwargs):
 if __name__ == "__main__":
     cxn = {
         'DurationSeconds': 3600,
-        'SerialNumber': 'arn:aws:iam::<awsaccount>:mfa/username',
+        'SerialNumber': 'arn:aws:iam::<accountid>:mfa/<serial>',
         'TokenCode': '<tokencode>'
     }
     temporary_sts_token = aws.authenticate_mfa_session_token(**cxn)
@@ -18,4 +25,6 @@ if __name__ == "__main__":
     filters = [{'Name': 'tag:env', 'Values': ['staging']}]
     subnets = aws.get_subnets(ec2, filters)
     parsed_subnets = aws.parse_subnet_data(subnets)
-    print(parsed_subnets)
+    security_groups = aws.get_security_groups(ec2, filters)
+    parsed_security_groups = aws.parse_security_group_data(security_groups)
+    pretty(parsed_security_groups)

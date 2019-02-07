@@ -80,7 +80,7 @@ def get_instances(resource, filters):
 
 def parse_security_group_data(security_groups):
     try:
-        return [{'id': i.id, 'tags': i.tags } for i in security_groups]
+        return [{'id': i.id, 'tags': i.tags, 'rules': i.ip_permissions } for i in security_groups]
     except Exception as e:
         return e
 
@@ -89,7 +89,8 @@ def parse_subnet_data(subnets):
         return [{
                 'subnet_id': i.id, 
                 'availability_zone': i.availability_zone, 
-                'tags': i.tags } for i in subnets]
+                'tags': i.tags,
+                'cidr': i.cidr_block } for i in subnets]
     except Exception as e:
         return e
 
